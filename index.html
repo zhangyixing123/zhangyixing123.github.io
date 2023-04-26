@@ -1,1 +1,131 @@
-<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=icon href=/favicon.ico><title>张益兴</title><link href=/css/app.e6826607.css rel=preload as=style><link href=/js/app.0e70b528.js rel=preload as=script><link href=/js/chunk-vendors.09e614eb.js rel=preload as=script><link href=/css/app.e6826607.css rel=stylesheet></head><body><noscript><strong>We're sorry but app-demo doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id=app></div><script src=/js/chunk-vendors.09e614eb.js></script><script src=/js/app.0e70b528.js></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>zyx</title>
+    <style>
+        html,
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        #canvas {
+            margin: 0;
+            padding: 0;
+            display: block;
+        }
+
+        .box{
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            z-index: 999;
+            color: white;
+        }
+
+        .mix {
+            width: 300px;
+            height: 300px;
+            background: url(./2.png) #0ff;
+            background-size: 100% 100%;
+            background-blend-mode: lighten;
+            position: relative;
+        }
+
+        .mix::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url(./2.png) #f00;
+            background-size: 100% 100%;
+            background-blend-mode: lighten;
+            mix-blend-mode: darken;
+            margin-left: 10px;
+            animation: shake 200ms infinite;
+        }
+
+        @keyframes shake {
+            50% {
+                transform: translate(1%);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" style="background:rgb(0, 0, 0)" width="100%" height="100%"></canvas>
+    <div class="box">
+        <div class="mix">
+
+        </div>
+        <p>Hi,人类！！！</p>
+    </div>
+    
+    <script type="text/javascript">
+        window.onload = function () {
+            //获取图形对象
+            var canvas = document.getElementById("canvas");
+            //获取图形的上下文
+            var context = canvas.getContext("2d");
+            //获取浏览器屏幕的宽度和高度
+            var W = window.innerWidth;
+            var H = window.innerHeight;
+            //设置canvas的宽度和高度
+            canvas.width = W;
+            canvas.height = H;
+            //每个文字的字体大小
+            var fontSize = 15;
+            //计算列
+            var colunms = Math.floor(W / fontSize);
+            //记录每列文字的y轴坐标
+            var drops = [];
+            //给每一个文字初始化一个起始点的位置
+            for (var i = 0; i < colunms; i++) {
+                drops.push(Math.floor(Math.random() * H));
+            }
+
+            //运动的文字
+            var str = "010101010101010101";
+            //4:fillText(str,x,y);原理就是去更改y的坐标位置
+            //绘画的函数
+            function draw() {
+                //让背景逐渐由透明到不透明
+                context.fillStyle = "rgba(0,0,0,0.05)";
+                context.fillRect(0, 0, W, H);
+                //给字体设置样式
+                //context.font = "700 "+fontSize+"px  微软雅黑";
+                context.font = fontSize + 'px arial';
+                //给字体添加颜色
+                context.fillStyle = "green"; //随意更改字体颜色
+                //写入图形中
+                for (var i = 0; i < colunms; i++) {
+                    var index = Math.floor(Math.random() * str.length);
+                    var x = i * fontSize;
+                    var y = drops[i] * fontSize;
+                    context.fillText(str[index], x, y);
+                    //如果要改变时间，肯定就是改变每次他的起点
+                    if (y >= canvas.height && Math.random() > 0.92) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+                requestAnimationFrame(draw)
+            };
+
+            function randColor() {
+                var r = Math.floor(Math.random() * 256);
+                var g = Math.floor(Math.random() * 256);
+                var b = Math.floor(Math.random() * 256);
+                return "rgb(" + r + "," + g + "," + b + ")";
+            }
+
+            draw();
+        };
+    </script>
+</body>
+
+</html>
